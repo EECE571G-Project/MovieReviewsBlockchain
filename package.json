@@ -1,8 +1,8 @@
 {
-  "name": "ethbay",
+  "name": "moviereviews",
   "version": "0.1.0",
-  "description": "An Ethereum Ebay",
-  "author": "zwang@ece.ubc.ca",
+  "description": "Moview Review App",
+  "author": "anupreet.kaur444@gmail.com",
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",

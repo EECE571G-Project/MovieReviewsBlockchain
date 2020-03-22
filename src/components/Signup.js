@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import "./css/Signup.css";
+import Left from "./images/left.jpg";
+import Right from "./images/right.jpg";
 
 export default function Signup(props) {
     
@@ -19,9 +21,11 @@ export default function Signup(props) {
   return (
     <div  style={{
         backgroundColor: '#E0E0E0',
-        width: '2000px',
+        width: '1530px',
         height: '650px'
       }}>
+    
+    <img src={Left} width="400" height="650"></img>
     <div style={{
         backgroundColor: 'white',
         width: '300px',
@@ -66,6 +70,11 @@ export default function Signup(props) {
         </Button>
       </form>
     </div>
+    </div>
+    <div style ={{
+      float: 'right'
+    }}>
+       <img src={Right}  right= '500px' width="400" height="650" position='absolute'></img>    
     </div>
     </div>
   );

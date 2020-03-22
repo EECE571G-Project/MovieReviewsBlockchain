@@ -1,17 +1,31 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import logo from '../logo.png';
 import './App.css';
-import Ethbay from '../abis/Ethbay'
+import MovieReview from '../abis/MovieReview'
 import Addressbar from './Addressbar'
 import Home from './Home'
+import Login from './Login'
+import Signup from './Signup'
 
 class App extends Component {
-  state = {
+  state = {    
     account: '',
-    totalNumber: 0,
-    items: [],
-    loading: true
+    loading: true,
+    owner: '',
+    locationNumber: 0,
+    cinemaHallNumber: 0,
+    movieNumber: 0,
+    userNumber: 0,
+    bookingNumber: 0,
+    checkInCheckOutNumber: 0,
+    reviewNumber: 0,
+    locations: [],
+    cinemaHalls: [],
+    movies: [],
+    userDetails: [],
+    movieBookings: [],
+    userCheckInCheckouts: [],
+    reviews: []
   }
 
   async componentDidMount(){
@@ -37,46 +51,216 @@ class App extends Component {
     const accounts = await web3.eth.getAccounts(); //account of metmask
     this.setState({account: accounts[0]}) // store the value of key and that value can be accessed anywhere between different componenets. like a cookie
     const networkId = await web3.eth.net.getId()  //it gives 5777
-    const networkData = Ethbay.networks[networkId];
+    const networkData = MovieReview.networks[networkId];
     if(networkData) {
-      const deployedEthbay = new web3.eth.Contract(Ethbay.abi, networkData.address); //use abi (bytecode) as bridge
-      this.setState({deployedEthbay: deployedEthbay}); // or  this.setState({deployedEthbay});  if name and value is same
-      const totalNumber = await deployedEthbay.methods.totalNumber().call(); //totalNumber is public variable in ethbay.sol therefore can be used like this
-      console.log(totalNumber);
-      this.setState({totalNumber})
-      for (var i = 1;i<= totalNumber;i++) {
-        const item = await deployedEthbay.methods.items(i).call();
+      const deployedMovieReview = new web3.eth.Contract(MovieReview.abi, networkData.address); //use abi (bytecode) as bridge
+      this.setState({deployedMovieReview: deployedMovieReview}); // or  this.setState({deployedMovieReview});  if name and value is same
+      const locationNumber = await deployedMovieReview.methods.locationNumber().call(); //locationNumber is public variable in MovieReview.sol therefore can be used like this
+      const cinemaHallNumber = await deployedMovieReview.methods.cinemaHallNumber().call();
+      const movieNumber = await deployedMovieReview.methods.movieNumber().call();
+      const userNumber = await deployedMovieReview.methods.userNumber().call();
+      const bookingNumber = await deployedMovieReview.methods.bookingNumber().call();
+      const checkInCheckOutNumber = await deployedMovieReview.methods.checkInCheckOutNumber().call();
+      const reviewNumber = await deployedMovieReview.methods.reviewNumber().call();
+     
+      console.log(locationNumber);
+
+      this.setState({locationNumber})
+      this.setState({cinemaHallNumber})
+      this.setState({movieNumber})
+      this.setState({userNumber})
+      this.setState({bookingNumber})
+      this.setState({checkInCheckOutNumber})
+      this.setState({reviewNumber})
+
+      // setting state for locations
+      for (var i = 1;i<= locationNumber;i++) {
+        const location = await deployedMovieReview.methods.locations(i).call();
         this.setState({
-          items:[...this.state.items, item] //adding new item in the array
+          locations:[...this.state.locations, location] 
         });
       }
+      console.log(this.state.locations);
+
+      // setting state for cinemaHalls
+      for (var i = 1;i<= cinemaHallNumber;i++) {
+        const cinemaHall = await deployedMovieReview.methods.cinemaHalls(i).call();
+        this.setState({
+          cinemaHalls:[...this.state.cinemaHalls, cinemaHall] 
+        });
+      }
+      console.log(this.state.cinemaHalls);
+
+      // setting state for movies
+      for (var i = 1;i<= movieNumber;i++) {
+        const movie = await deployedMovieReview.methods.movies(i).call();
+        this.setState({
+          movies:[...this.state.movies, movie]
+        });
+      }
+      console.log(this.state.movies);
+
+      // setting state for user login credentials
+      for (var i = 1;i<= userNumber;i++) {
+        const userDetail = await deployedMovieReview.methods.userDetails(i).call();
+        this.setState({
+          userDetails:[...this.state.userDetails, userDetail] 
+        });
+      }
+      console.log(this.state.userDetails);
+
+      // setting state for movie bookings
+      for (var i = 1;i<= bookingNumber;i++) {
+        const movieBooking = await deployedMovieReview.methods.movieBookings(i).call();
+        this.setState({
+          movieBookings:[...this.state.movieBookings, movieBooking] 
+        });
+      }
+      console.log(this.state.movieBookings);
+
+      // setting state for checkin checkouts
+      for (var i = 1;i<= checkInCheckOutNumber;i++) {
+        const userCheckInCheckout = await deployedMovieReview.methods.userCheckInCheckouts(i).call();
+        this.setState({
+          userCheckInCheckouts:[...this.state.userCheckInCheckouts, userCheckInCheckout] 
+        });
+      }
+      console.log(this.state.userCheckInCheckouts);
+
+      // setting state for reviews
+      for (var i = 1;i<= reviewNumber;i++) {
+        const review = await deployedMovieReview.methods.reviews(i).call();
+        this.setState({
+          reviews:[...this.state.reviews, review] 
+        });
+      }
+      console.log(this.state.reviews);
+    
       this.setState({loading: false})
-      console.log(this.state.items)
+
     } else {
-      window.alert('Ethbay contract is not found in your blockchain.')
+      window.alert('MovieReview contract is not found in your blockchain.')
     }
   
   }
 
- 
-  createItem = async (itemName, itemPrice) => {
+
+  addLocation = async (locationName) => {
     this.setState ({loading: true})
-    const gasAmount = await this.state.deployedEthbay.methods.createItem(itemName, itemPrice).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
-    this.state.deployedEthbay.methods.createItem(itemName, itemPrice).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    const gasAmount = await this.state.deployedMovieReview.methods.addLocation(locationName).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.addLocation(locationName).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
     })
   }
 
-  buyItem = async (itemId, sellingPrice) => {
+  deleteLocation = async (id) => {
     this.setState ({loading: true})
-    const gasAmount = await this.state.deployedEthbay.methods.buyItem(itemId).estimateGas({from: this.state.account, value: sellingPrice})
-    this.state.deployedEthbay.methods.buyItem(itemId).send({from: this.state.account, value: sellingPrice, gas: gasAmount })
+    const gasAmount = await this.state.deployedMovieReview.methods.deleteLocation(id).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.deleteLocation(id).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
     })
   }
-  
+
+
+  addCinemaHall = async (name, locationID) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.addCinemaHall(name, locationID).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.addCinemaHall(name, locationID).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  deleteCinemaHall = async (id) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.deleteCinemaHall(id).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.deleteCinemaHall(id).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  addMovie = async (name, cinemaHallID, startDate, endDate, startTime, totalTime) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.addMovie(name, cinemaHallID, startDate, endDate, startTime, totalTime).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.addMovie(name, cinemaHallID, startDate, endDate, startTime, totalTime).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  removeMovie = async (id) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.removeMovie(id).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.removeMovie(id).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  updateMovie = async (id, startDate,endDate, startTime, totalTime) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.updateMovie(id, startDate,endDate, startTime, totalTime).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.updateMovie(id, startDate,endDate, startTime, totalTime).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+  signUp = async (name, email, password) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.signUp(name, email, password).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.signUp(name, email, password).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  bookMovieTicket = async (userId, movieId, cinemaHallId, date, time, movieprice) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).estimateGas({from: this.state.account, value: movieprice})
+    this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).send({from: this.state.account, value: movieprice, gas: gasAmount })
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+  cancelMovieTicket = async (userId, movieId) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.cancelMovieTicket(userId, movieId).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.cancelMovieTicket(userId, movieId).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+
+  checkIn = async (userId, movieId, checkInTime) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.checkIn(userId, movieId, checkInTime).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.checkIn(userId, movieId, checkInTime).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+ 
+  checkOut = async (userId, movieId, checkOutTime, review) => {
+    this.setState ({loading: true})
+    const gasAmount = await this.state.deployedMovieReview.methods.checkOut(userId, movieId, checkOutTime, review).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedMovieReview.methods.checkOut(userId, movieId, checkOutTime, review).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
+    .once('receipt', (receipt)=> {
+      this.setState({loading: false});
+    })
+  }
+
+   
   render() {
     return (
       <div>
@@ -88,9 +272,32 @@ class App extends Component {
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Home items = {this.state.items}   //transfer the components/args to other file.
-                        createItem = {this.createItem}
-                        buyItem = {this.buyItem}
+                  <Home locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
+                        cinemaHallNumber = {this.state.cinemaHallNumber}
+                        movieNumber = {this.state.movieNumber}
+                        userNumber = {this.state.userNumber}
+                        bookingNumber = {this.state.bookingNumber}
+                        checkInCheckOutNumber = {this.state.checkInCheckOutNumber}
+                        reviewNumber = {this.state.reviewNumber}
+                        locations = {this.state.locations}
+                        cinemaHalls = {this.state.cinemaHalls}
+                        movies = {this.state.movies}
+                        userDetails = {this.state.userDetails}
+                        movieBookings = {this.state.movieBookings}
+                        userCheckInCheckouts = {this.state.userCheckInCheckouts}
+                        reviews = {this.state.reviews}
+                        addLocation = {this.addLocation}
+                        deleteLocation = {this.deleteLocation}
+                        addCinemaHall = {this.addCinemaHall}
+                        deleteCinemaHall = {this.deleteCinemaHall}
+                        addMovie = {this.addMovie}
+                        removeMovie = {this.removeMovie}
+                        updateMovie = {this.updateMovie}
+                        signUp = {this.signUp}
+                        bookMovieTicket = {this.bookMovieTicket}
+                        cancelMovieTicket = {this.cancelMovieTicket}
+                        checkIn = {this.checkIn}
+                        checkOut = {this.checkOut}   
                   />}
             </main>
           </div>
