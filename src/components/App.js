@@ -4,7 +4,7 @@ import logo from '../logo.png';
 import './App.css';
 import Ethbay from '../abis/Ethbay'
 import Addressbar from './Addressbar'
-import Login from "./Login";
+import Home from './Home'
 
 class App extends Component {
   state = {
@@ -13,7 +13,7 @@ class App extends Component {
     items: [],
     loading: true
   }
-
+123
   async componentDidMount(){
     await this.getWeb3Provider();
     await this.connectToBlockchain();
@@ -34,20 +34,20 @@ class App extends Component {
 
   async connectToBlockchain(){
     const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    this.setState({account: accounts[0]})
-    const networkId = await web3.eth.net.getId()
+    const accounts = await web3.eth.getAccounts(); //account of metmask
+    this.setState({account: accounts[0]}) // store the value of key and that value can be accessed anywhere between different componenets. like a cookie
+    const networkId = await web3.eth.net.getId()  //it gives 5777
     const networkData = Ethbay.networks[networkId];
     if(networkData) {
-      const deployedEthbay = new web3.eth.Contract(Ethbay.abi, networkData.address);
-      this.setState({deployedEthbay: deployedEthbay});
-      const totalNumber = await deployedEthbay.methods.totalNumber().call();
+      const deployedEthbay = new web3.eth.Contract(Ethbay.abi, networkData.address); //use abi (bytecode) as bridge
+      this.setState({deployedEthbay: deployedEthbay}); // or  this.setState({deployedEthbay});  if name and value is same
+      const totalNumber = await deployedEthbay.methods.totalNumber().call(); //totalNumber is public variable in ethbay.sol therefore can be used like this
       console.log(totalNumber);
       this.setState({totalNumber})
       for (var i = 1;i<= totalNumber;i++) {
         const item = await deployedEthbay.methods.items(i).call();
         this.setState({
-          items:[...this.state.items, item]
+          items:[...this.state.items, item] //adding new item in the array
         });
       }
       this.setState({loading: false})
@@ -61,8 +61,8 @@ class App extends Component {
  
   createItem = async (itemName, itemPrice) => {
     this.setState ({loading: true})
-    const gasAmount = await this.state.deployedEthbay.methods.createItem(itemName, itemPrice).estimateGas({from: this.state.account})
-    this.state.deployedEthbay.methods.createItem(itemName, itemPrice).send({from: this.state.account, gas: gasAmount})
+    const gasAmount = await this.state.deployedEthbay.methods.createItem(itemName, itemPrice).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
+    this.state.deployedEthbay.methods.createItem(itemName, itemPrice).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
     })
@@ -88,7 +88,7 @@ class App extends Component {
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Login items = {this.state.items} 
+                  <Home items = {this.state.items}   //transfer the components/args to other file.
                         createItem = {this.createItem}
                         buyItem = {this.buyItem}
                   />}
