@@ -13,7 +13,7 @@ class App extends Component {
     items: [],
     loading: true
   }
-123
+
   async componentDidMount(){
     await this.getWeb3Provider();
     await this.connectToBlockchain();
