@@ -60,7 +60,7 @@ class Main extends Component {
                             name = {item.itemId}
                             value = {item.itemPrice}
                             onClick={async (event)=>{
-                              await this.props.buyItem(event.target.name, event.target.value); //button name nad value
+                              await this.props.buyItem(event.target.name, event.target.value);
                             }}
                           >
                             Buy
