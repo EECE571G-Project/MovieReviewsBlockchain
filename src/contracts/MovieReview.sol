@@ -192,7 +192,7 @@ contract MovieReview {
 
     function addLocation(string memory _locationName) public {
         require(bytes(_locationName).length > 0, "Location's name is required");
-        require(msg.sender == owner, "Only owner can add location");
+        //require(msg.sender == owner, "Only owner can add location");
 
         uint256 count;
         for (uint256 i = 1; i <= locationNumber; i++) {
@@ -212,7 +212,7 @@ contract MovieReview {
         require(_id > 0 && _id <= locationNumber, 'Location should be valid');
         Location memory _location = locations[_id];
         require(_location.active != false, 'Location is already inactive');
-        require(msg.sender == owner, "Only owner can delete location");
+        //require(msg.sender == owner, "Only owner can delete location");
 
         _location.active = false;
         locations[_id] = _location;
@@ -223,7 +223,7 @@ contract MovieReview {
 
     function addCinemaHall(string memory _name, uint _locationID ) public {
         require(bytes(_name).length > 0, "Cinema Hall's name is required");
-        require(msg.sender == owner, "Only owner can add cinema hall");
+        //require(msg.sender == owner, "Only owner can add cinema hall");
         require(_locationID > 0 && _locationID <= locationNumber, 'Location should be valid');
         Location memory _location = locations[_locationID];
         require(_location.active != false, 'Location status is inactive');
@@ -246,7 +246,7 @@ contract MovieReview {
         require(_id > 0 && _id <= cinemaHallNumber, 'Cinema Hall should be valid');
         CinemaHall memory _cinemaHall = cinemaHalls[_id];
         require(_cinemaHall.active != false, 'Cinema Halls status is already inactive');
-        require(msg.sender == owner, "Only owner can delete cinema hall");
+        //require(msg.sender == owner, "Only owner can delete cinema hall");
 
         _cinemaHall.active = false;
         cinemaHalls[_id] = _cinemaHall;
@@ -257,7 +257,7 @@ contract MovieReview {
 
     function addMovie(string memory _name, uint _cinemaHallID, uint _startDate, uint _endDate, uint _startTime, uint _totalTime) public {
         require(bytes(_name).length > 0, "Movie's name is required");
-        require(msg.sender == owner, "Only owner can add movie");
+        //require(msg.sender == owner, "Only owner can add movie");
         require(_cinemaHallID > 0 && _cinemaHallID <= cinemaHallNumber, 'Cinema Hall should be valid');
         CinemaHall memory _cinemaHall = cinemaHalls[_cinemaHallID];
         require(_cinemaHall.active != false, 'Cinema Hall status is inactive');
@@ -280,7 +280,7 @@ contract MovieReview {
         require(_id > 0 && _id <= movieNumber, 'Movie should be valid');
         Movie memory _movie = movies[_id];
         require(_movie.active != false, 'Movie status is already inactive');
-        require(msg.sender == owner, "Only owner can remove movie");
+        //require(msg.sender == owner, "Only owner can remove movie");
 
         _movie.active = false;
         movies[_id] = _movie;
@@ -292,7 +292,7 @@ contract MovieReview {
         require(_id > 0 && _id <= movieNumber, 'Movie should be valid');
         Movie memory _movie = movies[_id];
         require(_movie.active != false, 'Movie status is already inactive');
-        require(msg.sender == owner, "Only owner can update movie");
+        //require(msg.sender == owner, "Only owner can update movie");
         uint256 count;
         if(movies[_id].startDate == _startDate && movies[_id].endDate == _endDate && movies[_id].startTime == _startTime && movies[_id].active == true )
         {

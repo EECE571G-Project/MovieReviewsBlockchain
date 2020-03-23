@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import Logo from "./images/home_page.jpg";
+import React, { Component } from 'react';
 import "./css/Home.css";
+import Logo from "./images/home_page.jpg";
 
-
-export default function Home(props) {
-
- return (
-    <div  style={{
+class Home extends Component {
+  render() {
+    return (
+      <div  style={{
         backgroundColor: '#E0E0E0',
         width: '1500px',
         height: '650px'
@@ -22,17 +20,16 @@ export default function Home(props) {
         position: 'absolute', left: '88%', top: '50%',
         transform: 'translate(-80%, -50%)'         
     }}>
-    
-   
-        <Button className="buttonW" block bsSize="large"  backgroundColor='545A5F' type="submit"  >
-          Login
-        </Button>
-        <Button className="buttonW" block bsSize="large"  backgroundColor='#3fffff' type="submit" >
-          SignUp
-        </Button>
-      
+        <button type="submit" className="btn btn-primary">Login</button>
+        <br></br>
+        <br></br>
+        <button type="submit" className="btn btn-primary">SignUp</button>
+       
+       </div>
     </div>
     </div>
-    </div>
-  );
+    );
+  }
 }
+
+export default Home;

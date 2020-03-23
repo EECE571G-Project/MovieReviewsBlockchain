@@ -3,9 +3,10 @@ import Web3 from 'web3';
 import './App.css';
 import MovieReview from '../abis/MovieReview'
 import Addressbar from './Addressbar'
-import Home from './Home'
 import Login from './Login'
 import Signup from './Signup'
+import Location from './Location'
+import Home from './Home'
 
 class App extends Component {
   state = {    
@@ -25,7 +26,8 @@ class App extends Component {
     userDetails: [],
     movieBookings: [],
     userCheckInCheckouts: [],
-    reviews: []
+    reviews: [],
+    currentUserId: 0
   }
 
   async componentDidMount(){
@@ -298,6 +300,7 @@ class App extends Component {
                         cancelMovieTicket = {this.cancelMovieTicket}
                         checkIn = {this.checkIn}
                         checkOut = {this.checkOut}   
+                        currentUserId = {this.state.currentUserId}
                   />}
             </main>
           </div>
