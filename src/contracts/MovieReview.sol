@@ -313,11 +313,13 @@ contract MovieReview {
         require(bytes(_email).length > 0, "Email is required");
         require(bytes(_password).length > 0, "Password is required");
         
-        uint256 count;
-        for (uint256 i = 1; i <= userNumber; i++) {
-            if(keccak256(bytes(userDetails[i].name)) == keccak256(bytes(_name)) && keccak256(bytes(userDetails[i].email)) == keccak256(bytes(_email)))
-            {
-                count++;
+        uint256 count = 0;
+        if(userNumber > 0) {
+            for (uint256 i = 1; i <= userNumber; i++) {
+                if(keccak256(bytes(userDetails[i].name)) == keccak256(bytes(_name)) && keccak256(bytes(userDetails[i].email)) == keccak256(bytes(_email)))
+                {
+                    count = 1;
+                }
             }
         }
         require(count == 0, "User already exists");

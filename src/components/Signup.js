@@ -22,12 +22,17 @@ class Signup extends Component {
         <form onSubmit = 
           {async (event) => {
             event.preventDefault();
-            const name = this.email.name
+            const name = this.username.value
             const email = this.email.value
             const password = this.password.value
            
+            console.log(this.props.userNumber)
+            console.log(this.props.userDetails)
+            console.log(name)
+            console.log(email)
+            console.log(password)
             await this.props.signUp(name, email, password)
-            console.log("user added ")
+            console.log("user added")
           }          
             
           }>
@@ -41,7 +46,7 @@ class Signup extends Component {
             type="text"
             ref={(input)=>{this.username=input}}
             className="form-control"
-            placeholder="Name"
+            placeholder="username"
             required/>
         </div>
         <div className="form-group mr-sm-2"></div>
@@ -53,7 +58,7 @@ class Signup extends Component {
             type="text"
             ref={(input)=>{this.email=input}}
             className="form-control"
-            placeholder="Email"
+            placeholder="email"
             required/>
         </div>
         <div className="form-group mr-sm-2">

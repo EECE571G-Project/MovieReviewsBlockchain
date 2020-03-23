@@ -65,7 +65,13 @@ class App extends Component {
       const checkInCheckOutNumber = await deployedMovieReview.methods.checkInCheckOutNumber().call();
       const reviewNumber = await deployedMovieReview.methods.reviewNumber().call();
      
-      console.log(locationNumber);
+      console.log("locationNumber - "+locationNumber);
+      console.log("cinemaHallNumber - "+cinemaHallNumber);
+      console.log("movieNumber - "+movieNumber);
+      console.log("userNumber - "+userNumber);
+      console.log("checkInCheckOutNumber - "+checkInCheckOutNumber);
+      console.log("bookingNumber - "+bookingNumber);
+      console.log("reviewNumber - "+reviewNumber);
 
       this.setState({locationNumber})
       this.setState({cinemaHallNumber})
@@ -274,7 +280,7 @@ class App extends Component {
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Home locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
+                  <Location locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
                         cinemaHallNumber = {this.state.cinemaHallNumber}
                         movieNumber = {this.state.movieNumber}
                         userNumber = {this.state.userNumber}
