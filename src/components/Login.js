@@ -29,18 +29,22 @@ class Login extends Component {
             let userid = 0;
             for(var i= 1; i <= userNumber ; i++)
             {
-              if (userDetails[i].email == email && userDetails[i].password == password)
+              if (userDetails[i-1].email == email && userDetails[i-1].password == password)
               {
                 userid = i;
               }
             }
             if(userid !=0)
             {
-              this.props.currentUserId = userid;
+              this.setState ({currentUserId: userid})
+              this.setState ({currentUserName: userDetails[userid-1].name})
               console.log("found");  
+              console.log(userDetails[userid-1].name)
               //todo redirect to home page will all the options
             }
+            else{
             console.log("not found");
+            }
           }
             
           }>

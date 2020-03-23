@@ -27,7 +27,8 @@ class App extends Component {
     movieBookings: [],
     userCheckInCheckouts: [],
     reviews: [],
-    currentUserId: 0
+    currentUserId: 0,
+    currentUserName: '' 
   }
 
   async componentDidMount(){
@@ -307,6 +308,7 @@ class App extends Component {
                         checkIn = {this.checkIn}
                         checkOut = {this.checkOut}   
                         currentUserId = {this.state.currentUserId}
+                        currentUserName = {this.state.currentUserName}
                   />}
             </main>
           </div>
