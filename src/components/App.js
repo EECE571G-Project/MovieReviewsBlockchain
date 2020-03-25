@@ -6,6 +6,7 @@ import Addressbar from './Addressbar'
 import Login from './Login'
 import Signup from './Signup'
 import Location from './Location'
+import Cinema from './Cinema'
 import Home from './Home'
 
 class App extends Component {
@@ -281,7 +282,7 @@ class App extends Component {
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Login locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
+                  <Cinema locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
                         cinemaHallNumber = {this.state.cinemaHallNumber}
                         movieNumber = {this.state.movieNumber}
                         userNumber = {this.state.userNumber}

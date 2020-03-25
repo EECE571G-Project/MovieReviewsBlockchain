@@ -232,10 +232,13 @@ contract MovieReview {
         require(_location.active != false, 'Location status is inactive');
 
         uint256 count;
-        for (uint256 i = 1; i <= cinemaHallNumber; i++) {
-            if(keccak256(bytes(cinemaHalls[i].name)) == keccak256(bytes(_name)) && cinemaHalls[i].locationId == _locationID)
-            {
-                count++;
+        if(cinemaHallNumber > 0)
+        {
+            for (uint256 i = 1; i <= cinemaHallNumber; i++) {
+                if(keccak256(bytes(cinemaHalls[i].name)) == keccak256(bytes(_name)) && cinemaHalls[i].locationId == _locationID)
+                {
+                    count++;
+                }
             }
         }
         require(count == 0, "Cinema Hall with same name already exist in the given Location");
