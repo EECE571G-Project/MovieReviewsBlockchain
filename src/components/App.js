@@ -281,7 +281,7 @@ class App extends Component {
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Location locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
+                  <Login locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
                         cinemaHallNumber = {this.state.cinemaHallNumber}
                         movieNumber = {this.state.movieNumber}
                         userNumber = {this.state.userNumber}

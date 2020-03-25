@@ -18,7 +18,7 @@ class Signup extends Component {
         position: 'absolute', left: '50%', top: '30%',
         transform: 'translate(-50%, -30%)' 
       }}>
-        <p><h2><center><b><font face="biome" backgroundColor = 'gray'>Login</font></b></center></h2></p>
+        <p><h2><center><b><font face="biome" backgroundColor = 'gray'>Signup</font></b></center></h2></p>
         <form onSubmit = 
           {async (event) => {
             event.preventDefault();

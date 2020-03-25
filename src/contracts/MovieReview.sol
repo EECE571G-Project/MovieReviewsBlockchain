@@ -194,11 +194,14 @@ contract MovieReview {
         require(bytes(_locationName).length > 0, "Location's name is required");
         //require(msg.sender == owner, "Only owner can add location");
 
-        uint256 count;
-        for (uint256 i = 1; i <= locationNumber; i++) {
-            if(keccak256(bytes(locations[i].name)) == keccak256(bytes(_locationName)))
-            {
-                count++;
+        uint256 count = 0;
+        if(locationNumber > 0)
+        {
+            for (uint256 i = 1; i <= locationNumber; i++) {
+                if(keccak256(bytes(locations[i].name)) == keccak256(bytes(_locationName)))
+                {
+                    count++;
+                }
             }
         }
         require(count == 0, "Location with same name already exist");
