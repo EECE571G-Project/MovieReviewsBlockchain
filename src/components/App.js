@@ -8,6 +8,7 @@ import Signup from './Signup'
 import Location from './Location'
 import Cinema from './Cinema'
 import Home from './Home'
+import { Link, BrowserRouter as Router, Route, Switch , BrowserRouter} from 'react-router-dom';
 
 class App extends Component {
   state = {    
@@ -278,10 +279,19 @@ class App extends Component {
         <div className="container-fluid mt-5">
           <div className="row">
             <main>
-              { this.state.loading 
+              { false
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
+                <Router>
+                  <Link to="/">Home</Link>
+                  <Link to="/Login">Login</Link>
+                  <Link to="/Signup">Login</Link>
+                  <Route exact path="/" render={(props) => <Home {...props} state = {this.state}/>} />
+                  <Route exact path="/Login" component={Login} />
+                  <Route exact path="/Signup" component={Signup} />
+                </Router>
+                /*
                   <Cinema locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
                         cinemaHallNumber = {this.state.cinemaHallNumber}
                         movieNumber = {this.state.movieNumber}
@@ -310,7 +320,9 @@ class App extends Component {
                         checkOut = {this.checkOut}   
                         currentUserId = {this.state.currentUserId}
                         currentUserName = {this.state.currentUserName}
-                  />}
+                  />
+              */
+              }
             </main>
           </div>
         </div>

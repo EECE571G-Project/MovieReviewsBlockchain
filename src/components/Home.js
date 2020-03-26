@@ -1,9 +1,27 @@
 import React, { Component } from 'react';
 import "./css/Home.css";
 import Logo from "./images/home_page.jpg";
+import {Route} from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
+
+
 
 class Home extends Component {
+  loginHandler = () => {
+    console.log(this.props)
+    this.props.history.push('/Login', {locations: JSON.stringify(this.props.state.locations), locationNumber: JSON.stringify(this.props.state.locationNumber), userNumber: JSON.stringify(this.props.state.userNumber)});
+  }
+
+  signUpHandler = () => {
+    this.props.history.push('/Signup');
+  }
+
   render() {
+    {
+      console.log("Inside home render");
+      console.log(this.props);
+      console.log(this.props.state);
+    }
     return (
       <div  style={{
         backgroundColor: '#E0E0E0',
@@ -20,10 +38,10 @@ class Home extends Component {
         position: 'absolute', left: '88%', top: '50%',
         transform: 'translate(-80%, -50%)'         
     }}>
-        <button type="submit" className="btn btn-primary">Login</button>
+        <button type="submit" onClick={this.loginHandler} className="btn btn-primary">Login</button>
         <br></br>
         <br></br>
-        <button type="submit" className="btn btn-primary">SignUp</button>
+        <button type="submit" onClick={this.signUpHandler} className="btn btn-primary">SignUp</button>
        
        </div>
     </div>

@@ -4,6 +4,10 @@ import Right from "./images/right.jpg";
 
 class Login extends Component {
   render() {
+    {
+      console.log("Inside Login render");
+      console.log(this.props);
+    }
     return (
       <div id="content" style={{
         backgroundColor: '#E0E0E0',
