@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import Left from "./images/left.jpg";
 import Right from "./images/right.jpg";
-import UserHome from './UserHome'
+import MovieBooking from './MovieBooking'
 import {Redirect, BrowserRouter, Route} from 'react-router-dom';
 
 import {  withRouter, Router} from 'react-router';
 let username = '';
 let userid = 0;
 
-class Signup extends Component {
+class AdminHome extends Component {
   constructor(props)
   {
     super(props)
-    console.log("Inside signup constructor")
+    console.log("Inside AdminHome constructor")
     console.log(this.props) 
   }
+
+ 
 
   state = {
     homeRedirect: false
@@ -28,19 +30,18 @@ class Signup extends Component {
 
   renderRedirect = () => {
     if(this.state.homeRedirect){
-      alert("Signup successfull");    
-     
+      alert("AdminHome successfull");     
     }
   }
 
   render() {
     {
-      console.log("Inside sign up render")
+      console.log("Inside user home render")
       if(this.state.homeRedirect){
-        alert("Signup successfull");
+        alert("AdminHome successfull");
         return (
           <BrowserRouter>
-          <Route path='/' render={props => <UserHome {...props} state = {this.props.location} username = {username} userid = {userid}/>}
+          <Route path='/' render={props => <MovieBooking {...props} state = {this.props.state} username = {username} userid = {userid}/>}
           />
           </BrowserRouter>
         )
@@ -62,7 +63,7 @@ class Signup extends Component {
         position: 'absolute', left: '50%', top: '30%',
         transform: 'translate(-50%, -30%)' 
       }}>
-        <h2><center><b><font face="biome" >Signup</font></b></center></h2>
+        <h2><center><b><font face="biome" >AdminHome</font></b></center></h2>
         <form onSubmit = 
           {async (event) => {
             event.preventDefault();
@@ -70,10 +71,10 @@ class Signup extends Component {
             const email = this.email.value
             const password = this.password.value
            
-            await this.props.location.signUp(name, email, password)
+            await this.props.state.signUp(name, email, password)
             console.log("user added")
             username = this.username.value
-            userid = this.props.location.userNumber
+            userid = this.props.state.userNumber
            
             this.setHomeRedirect()
           }          
@@ -132,4 +133,4 @@ class Signup extends Component {
   }
 }
 
-export default withRouter(Signup);
+export default withRouter(AdminHome);

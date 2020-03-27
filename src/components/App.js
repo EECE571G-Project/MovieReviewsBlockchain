@@ -8,9 +8,30 @@ import Signup from './Signup'
 import Location from './Location'
 import Cinema from './Cinema'
 import Home from './Home'
+import UserHome from './UserHome'
 import { Link, BrowserRouter as Router, Route, Switch , BrowserRouter} from 'react-router-dom';
 
+
+import {  withRouter} from 'react-router';
+
 class App extends Component {
+  constructor(){
+    super()
+    this.state.addLocation = this.addLocation
+    this.state.deleteLocation = this.deleteLocation
+    this.state.addCinemaHall = this.addCinemaHall
+    this.state.deleteCinemaHall = this.deleteCinemaHall
+    this.state.addMovie = this.addMovie
+    this.state.removeMovie = this.removeMovie
+    this.state.updateMovie = this.updateMovie
+    this.state.signUp = this.signUp
+    this.state.bookMovieTicket = this.bookMovieTicket
+    this.state.cancelMovieTicket = this.cancelMovieTicket
+    this.state.checkIn = this.checkIn
+    this.state.checkOut = this.checkOut
+
+  }
+
   state = {    
     account: '',
     loading: true,
@@ -226,11 +247,15 @@ class App extends Component {
 
   signUp = async (name, email, password) => {
     this.setState ({loading: true})
+    alert("Signup click");
+    /*
     const gasAmount = await this.state.deployedMovieReview.methods.signUp(name, email, password).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
     this.state.deployedMovieReview.methods.signUp(name, email, password).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
+    
     })
+    */
   }
 
 
@@ -285,9 +310,14 @@ class App extends Component {
                 : 
                 <Router>
                   <Link to="/">Home</Link>
+                  <Link to="/Home">Home</Link>
+                  <Link to="/UserHome">UserHome</Link>
                   <Link to="/Login">Login</Link>
                   <Link to="/Signup">Login</Link>
+                  
                   <Route exact path="/" render={(props) => <Home {...props} state = {this.state}/>} />
+                  <Route exact path="/Home" component={Home} />
+                  <Route exact path="/UserHome" component={UserHome} />
                   <Route exact path="/Login" component={Login} />
                   <Route exact path="/Signup" component={Signup} />
                 </Router>
@@ -331,4 +361,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

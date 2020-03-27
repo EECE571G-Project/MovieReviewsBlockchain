@@ -1,12 +1,67 @@
 import React, { Component } from 'react';
 import Left from "./images/left.jpg";
 import Right from "./images/right.jpg";
+import {Redirect, BrowserRouter, Route} from 'react-router-dom';
+import UserHome from './UserHome';
+import AdminHome from './AdminHome';
+
+import {  withRouter, Router} from 'react-router';
+let username = '';
+let userid = 0;
+let userpassword = '';
+let useremail = '';
 
 class Login extends Component {
+  constructor(props)
+  {
+    super(props)
+    console.log("Inside Login constructor")
+    console.log(this.props) 
+  }
+
+
+  state = {
+    homeRedirect: false
+  }
+  
+  setHomeRedirect = () => {
+    this.setState({
+      homeRedirect: true
+    })
+  }
+
+  renderRedirect = () => {
+    if(this.state.homeRedirect){
+      alert("Login successfull");    
+     
+    }
+  }
   render() {
     {
-      console.log("Inside Login render");
-      console.log(this.props);
+      console.log("Inside Login render")
+      alert("Login successfull");
+      if(this.state.homeRedirect){
+        console.log("inside if")
+        console.log(useremail)
+        console.log(userpassword)
+        if(useremail == 'admin' && userpassword == 'admin')
+        {
+          return (
+
+            <BrowserRouter>
+            <Route path='/' render={props => <AdminHome {...props} state = {this.props.location} username = {username} userid = {userid}/>}
+            />
+            </BrowserRouter>
+          )
+        }
+       
+        return (
+          <BrowserRouter>
+          <Route path='/' render={props => <UserHome {...props} state = {this.props.location} username = {username} userid = {userid}/>}
+          />
+          </BrowserRouter>
+        )
+      }
     }
     return (
       <div id="content" style={{
@@ -14,6 +69,7 @@ class Login extends Component {
         width: '1530px',
         height: '650px'
       }}>
+         {this.renderRedirect()}
       <img src={Left} width="400" height="650"></img>
       <div  style={{
         backgroundColor: 'white',
@@ -22,7 +78,7 @@ class Login extends Component {
         position: 'absolute', left: '50%', top: '30%',
         transform: 'translate(-50%, -30%)' 
       }}>
-        <p><h2><center><b><font face="biome" backgroundColor = 'gray'>Login</font></b></center></h2></p>
+        <h2><center><b><font face="biome" >Login</font></b></center></h2>
         <form onSubmit = 
           {async (event) => {
             event.preventDefault();
@@ -40,14 +96,28 @@ class Login extends Component {
             }
             if(userid !=0)
             {
-              this.setState ({currentUserId: userid})
-              this.setState ({currentUserName: userDetails[userid-1].name})
+              username = userDetails[userid-1].name
+              userid= userid
+              password= this.password.value
+             // this.setState ({currentUserId: userid})
+              //this.setState ({currentUserName: userDetails[userid-1].name})
               console.log("found");  
               console.log(userDetails[userid-1].name)
+              this.setHomeRedirect()
               //todo redirect to home page will all the options
             }
             else{
-            console.log("not found");
+              useremail = this.email.value
+              userid= userid
+              userpassword= this.password.value
+              if(useremail == 'admin' && userpassword == 'admin')
+              {
+                this.setHomeRedirect()
+              }
+            else 
+            {
+              alert("User not found")
+            }            
             }
           }
             
@@ -91,4 +161,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
