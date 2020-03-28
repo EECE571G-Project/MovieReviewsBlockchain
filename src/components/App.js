@@ -247,15 +247,14 @@ class App extends Component {
 
   signUp = async (name, email, password) => {
     this.setState ({loading: true})
-    alert("Signup click");
-    /*
+    
     const gasAmount = await this.state.deployedMovieReview.methods.signUp(name, email, password).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
     this.state.deployedMovieReview.methods.signUp(name, email, password).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
     
     })
-    */
+    
   }
 
 
@@ -304,7 +303,7 @@ class App extends Component {
         <div className="container-fluid mt-5">
           <div className="row">
             <main>
-              { false
+              { this.state.loading
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 

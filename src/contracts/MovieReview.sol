@@ -21,6 +21,7 @@ contract MovieReview {
     struct CinemaHall {
         uint id;
         uint locationId;
+        string locationName;
         string name;
         bool active;
     }
@@ -28,6 +29,7 @@ contract MovieReview {
     struct Movie {
         uint id;
         uint cinemaHallId;
+        string cinemaHallName;
         string name;
         uint startDate;
         uint endDate;
@@ -47,7 +49,9 @@ contract MovieReview {
         uint bookingId;
         uint userId;
         uint movieId;
+        string movieName;
         uint cinemaHallID;
+        string cinemaHallName;
         uint date;
         uint startTime;
         bool cancelled;
@@ -57,6 +61,7 @@ contract MovieReview {
         uint cid;
         uint userId;
         uint movieId;
+        string movieName;
         uint checkInTime;
         uint checkOutTime;
 
@@ -93,6 +98,7 @@ contract MovieReview {
     event CinemaHallAdded(
         uint id,
         uint locationId,
+        string locationName,
         string name,
         bool active
     );
@@ -107,6 +113,7 @@ contract MovieReview {
     event MovieAdded(
         uint id,
         uint cinemaHallId,
+        string cinemaHallName,
         string name,
         uint startDate,
         uint endDate,
@@ -148,7 +155,9 @@ contract MovieReview {
         uint bookingId,
         uint userId,
         uint movieId,
+        string movieName,
         uint cinemaHallID,
+        string cinemaHallName,
         uint date,
         uint startTime,
         bool cancelled
@@ -166,6 +175,7 @@ contract MovieReview {
         uint cid,
         uint userId,
         uint movieId,
+        string movieName,
         uint checkInTime
     );
 
@@ -173,6 +183,7 @@ contract MovieReview {
         uint cid,
         uint userId,
         uint movieId,
+        string movieName,
         uint checkInTime,
         uint checkOutTime
     );
@@ -244,8 +255,8 @@ contract MovieReview {
         require(count == 0, "Cinema Hall with same name already exist in the given Location");
 
         cinemaHallNumber++;
-        cinemaHalls[cinemaHallNumber] = CinemaHall(cinemaHallNumber, _locationID, _name, true);
-        emit CinemaHallAdded(cinemaHallNumber, _locationID, _name, true);
+        cinemaHalls[cinemaHallNumber] = CinemaHall(cinemaHallNumber, _locationID, _location.name, _name, true);
+        emit CinemaHallAdded(cinemaHallNumber, _locationID,  _location.name,  _name, true);
     }
 
     function deleteCinemaHall(uint _id) public {
@@ -278,8 +289,8 @@ contract MovieReview {
         require(count == 0, "Movie with same  details alredy exists");
 
         movieNumber++;
-        movies[movieNumber] = Movie(movieNumber, _cinemaHallID, _name, _startDate, _endDate, _startTime, _totalTime, true);
-        emit MovieAdded(movieNumber, _cinemaHallID, _name, _startDate, _endDate, _startTime, _totalTime, true);
+        movies[movieNumber] = Movie(movieNumber, _cinemaHallID, _cinemaHall.name, _name, _startDate, _endDate, _startTime, _totalTime, true);
+        emit MovieAdded(movieNumber, _cinemaHallID, _cinemaHall.name, _name, _startDate, _endDate, _startTime, _totalTime, true);
     }
 
     function removeMovie(uint _id) public {
@@ -342,13 +353,15 @@ contract MovieReview {
         require(_cinemaHallId > 0 && _cinemaHallId <= cinemaHallNumber, 'Cinema Hall should be valid');
         
         Movie memory _movie = movies[_movieId];
+        CinemaHall memory _cinema = cinemaHalls[_cinemaHallId];
         require(_movie.active != false, 'Movie status is  inactive');
         uint value = 500000000000000000;
         require(msg.value >= value, "Payment should be enough i.e. 0.5 ETHER!");
         bookingNumber++;
         owner.transfer(msg.value);
-        movieBookings[bookingNumber] = MovieBooking(bookingNumber, _userId, _movieId, _cinemaHallId, _date, _time, false);
-        emit MovieBooked(bookingNumber, _userId, _movieId, _cinemaHallId, _date, _time, false);
+       
+        movieBookings[bookingNumber] = MovieBooking(bookingNumber, _userId, _movieId, _movie.name, _cinemaHallId, _cinema.name, _date, _time, false);
+        emit MovieBooked(bookingNumber, _userId, _movieId,  _movie.name, _cinemaHallId, _cinema.name, _date, _time, false);
     }
 
     function cancelMovieTicket(uint _userId, uint _movieId) public payable {
@@ -399,8 +412,8 @@ contract MovieReview {
         require(count == 0, 'User has already checked in');
 
         checkInCheckOutNumber++;
-        userCheckInCheckouts[checkInCheckOutNumber] = UserCheckInCheckout(checkInCheckOutNumber, _userId, _movieId, _checkInTime, 0);
-        emit CheckInDone(checkInCheckOutNumber, _userId, _movieId, _checkInTime);
+        userCheckInCheckouts[checkInCheckOutNumber] = UserCheckInCheckout(checkInCheckOutNumber, _userId, _movieId, _movieBooking.movieName, _checkInTime, 0);
+        emit CheckInDone(checkInCheckOutNumber, _userId, _movieId, _movieBooking.movieName, _checkInTime);
     }
 
     function checkOut(uint _userId, uint _movieId, uint _checkOutTime, string memory _review) public {
@@ -434,7 +447,7 @@ contract MovieReview {
         uint checkInTime = _checkInCheckout.checkInTime;
 
         calculateRatingBasedOnTime(_userId, _movieId, checkInTime, _checkOutTime,  _movie.totalTime, _review);
-        emit CheckOutDone(cid, _userId, _movieId, checkInTime, _checkOutTime);
+        emit CheckOutDone(cid, _userId, _movieId, _checkInCheckout.movieName, checkInTime, _checkOutTime);
     }
 
     function calculateRatingBasedOnTime( uint _userId, uint _movieId, uint _checkInTime, uint _checkOutTime, uint movieLength, string memory _review) public {

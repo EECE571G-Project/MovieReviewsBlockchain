@@ -97,6 +97,7 @@ class Cinema extends Component {
             <th scope="col">Cinema Hall ID</th>
             <th scope="col">Cinema Hall Name</th>
             <th scope="col">Location Id</th>
+            <th scope="col">Location Name</th>
             <th scope="col">Active</th>
             <th scope="col"></th>
           </tr> 
@@ -111,6 +112,7 @@ class Cinema extends Component {
                     <th scope="row">{hall.id.toString()}</th>   
                     <td>{hall.name}</td> 
                     <td>{hall.locationId}</td> 
+                    <td>{hall.locationName}</td> 
                     <td>{hall.active.toString()}</td> 
                     <td>
                       {

@@ -107,6 +107,7 @@ class Login extends Component {
               //todo redirect to home page will all the options
             }
             else{
+              username = 'Admin'
               useremail = this.email.value
               userid= userid
               userpassword= this.password.value

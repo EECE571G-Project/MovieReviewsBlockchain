@@ -36,7 +36,7 @@ class AdminHome extends Component {
 
   render() {
     {
-      console.log("Inside user home render")
+      console.log("Inside Admin home render")
       if(this.state.homeRedirect){
         alert("AdminHome successfull");
         return (
