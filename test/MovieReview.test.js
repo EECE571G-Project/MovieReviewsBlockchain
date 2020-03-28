@@ -277,7 +277,13 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             movieNumber = await movieReview.movieNumber()
         })
         
-        it ('Booking movie should be successful if all correct', async ()=>{          
+        it ('Booking movie should be successful if all correct', async ()=>{     
+            let owner = await movieReview.owner()
+            let ownerOldBalance;
+            ownerOldBalance = await web3.eth.getBalance(owner);
+            ownerOldBalance = new web3.utils.BN(ownerOldBalance);
+
+
             let startdate = (new Date("2020-04-01")).getTime();
             let startDateInUnixTimestamp = startdate / 1000;
 
@@ -292,6 +298,23 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             assert.equal(event.cinemaHallID.toNumber(), 2, 'cinemaHallID id is correct');           
             assert.equal(event.date.toNumber(), startDateInUnixTimestamp,'Start date is correct');                   
             assert.equal(event.cancelled, false,'status is correct');
+
+            // Check the owner receives the funds
+            let ownerNewBalance;
+            ownerNewBalance = await web3.eth.getBalance(owner);
+            ownerNewBalance = await new web3.utils.BN(ownerNewBalance);
+
+            let price;
+            price = web3.utils.toWei('0.5', 'Ether');
+            price = new web3.utils.BN(price);
+
+            console.log(ownerOldBalance.toString())
+            console.log(price.toString())
+            
+            const expectedBalacne = ownerOldBalance.add(price);
+            console.log(expectedBalacne.toString())
+            console.log(ownerNewBalance.toString())
+            assert.equal(expectedBalacne.toString(), ownerNewBalance.toString());
         })
     
 
@@ -351,6 +374,10 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
 
         
         it ('Cancelling movie booking should be successfull if everything is fine', async ()=>{
+            let userOldBalance;
+            userOldBalance = await web3.eth.getBalance(user1);
+            userOldBalance = new web3.utils.BN(userOldBalance);
+
             movieBookings = await movieReview.movieBookings(1)
             result =  await movieReview.cancelMovieTicket(1, 2,{from: user1});
             const event = result.logs[0].args;
@@ -358,6 +385,24 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             assert.equal(event.userId.toNumber(), 1, 'User id is correct');
             assert.equal(event.movieId.toNumber(), 2, 'Movie id is correct');
             assert.equal(event.cancelled, true,'status is correct');
+
+             // Check the user receives the funds
+             let userNewBalance;
+             userNewBalance = await web3.eth.getBalance(user1);
+             userNewBalance = await new web3.utils.BN(userNewBalance);
+ 
+             let price;
+             price = web3.utils.toWei('0.5', 'Ether');
+             price = new web3.utils.BN(price);
+ 
+             console.log(userOldBalance.toString())
+             console.log(userNewBalance.toString())
+             console.log(price.toString())
+             
+             const expectedBalacne = userOldBalance.add(price);
+             console.log(expectedBalacne.toString())
+             console.log(userNewBalance.toString())
+             assert.equal(expectedBalacne.toString(), userNewBalance.toString());
             
         })
         it ('Cancelling movie booking should fail if already cancelled', async ()=>{
