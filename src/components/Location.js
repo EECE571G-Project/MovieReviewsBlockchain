@@ -4,7 +4,17 @@ import Right from "./images/right.jpg";
 import "./css/Location.css";
 
 class Location extends Component {
+  constructor(props){
+    super(props)
+    console.log("Inside LOcation constructor")
+    console.log(this.props) 
+  }
+  
   render() {
+    {
+      console.log("inside location render");
+      console.log(this.props)
+    }
     return (
       <div id="content" style={{
         backgroundColor: '#E0E0E0',
@@ -24,7 +34,12 @@ class Location extends Component {
           {async (event) => {
             event.preventDefault();
             const locationName = this.locationName.value
-            await this.props.addLocation(locationName)}
+            console.log(locationName)
+            console.log(this.props)
+            await this.props.location.addLocation(locationName)
+            console.log("successfully")
+            alert("Location Added Successfully")
+          }
             
           }>
         <div className="form-group mr-sm-2">
@@ -42,45 +57,7 @@ class Location extends Component {
         </form>
 
        
-        <p>&nbsp;</p>
-        <h3>Locations</h3>
-        <table className="table">
-        <thead id="itemList">
-          <tr>
-            <th scope="col">Location ID</th>
-            <th scope="col">Location Name</th>
-            <th scope="col">Active</th>
-            <th scope="col"></th>
-          </tr> 
-        </thead>
-        <tbody id="itemList">
-            {this.props.locations.map((location, key)=>{
-                return(
-                    <tr key={key}>
-                    <th scope="row">{location.id.toString()}</th>   
-                    <td>{location.name}</td> 
-                    <td>{location.active.toString()}</td> 
-                    <td>
-                      {
-                        location.active
-                          ?
-                          <button 
-                            name = {location.id}
-                            onClick={async (event)=>{
-                              await this.props.deleteLocation(event.target.name);
-                            }}
-                          >
-                            Delete
-                          </button>
-                          : 
-                          null
-                        }
-                    </td>
-                  </tr>
-                )
-            })}
-        </tbody>
-        </table>
+     
       
       </div>
       <div style ={{

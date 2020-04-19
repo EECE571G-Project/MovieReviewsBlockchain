@@ -1,15 +1,61 @@
 import React, { Component } from 'react';
 import Left from "./images/left.jpg";
 import Right from "./images/right.jpg";
+import UserHome from './UserHome'
+import {Redirect, BrowserRouter, Route} from 'react-router-dom';
+
+import {  withRouter, Router} from 'react-router';
+let username = '';
+let userid = 0;
+let homeRedirect = false;
 
 class Signup extends Component {
+  constructor(props)
+  {
+    super(props)
+    console.log("Inside signup constructor")
+    console.log(this.props) 
+  }
+
+ 
+  setHomeRedirect = () => {
+    console.log("ïnside.setHomeRedirect");
+    homeRedirect = true;
+    console.log("homeredirect value")
+    console.log(homeRedirect);
+  }
+
+  renderRedirect = () => {
+    console.log("ïnside. render redirect");
+    if(homeRedirect){
+      alert("Signup successfull");    
+     
+    }
+    console.log("homeredirect value")
+    console.log(homeRedirect);
+  }
+
   render() {
+    {
+      console.log("Inside sign up render")
+      if(homeRedirect){
+        alert("Signup successfull");
+        return (
+          <BrowserRouter>
+          <Route path='/' render={props => <UserHome {...props} state = {this.props.location} currentUserName = {username} currentUserId = {userid}/>}
+          />
+          </BrowserRouter>
+        )
+      }
+    }
+
     return (
       <div id="content" style={{
         backgroundColor: '#E0E0E0',
         width: '1530px',
         height: '650px'
       }}>
+        {this.renderRedirect()}
       <img src={Left} width="400" height="650"></img>
       <div  style={{
         backgroundColor: 'white',
@@ -18,7 +64,7 @@ class Signup extends Component {
         position: 'absolute', left: '50%', top: '30%',
         transform: 'translate(-50%, -30%)' 
       }}>
-        <p><h2><center><b><font face="biome" backgroundColor = 'gray'>Login</font></b></center></h2></p>
+        <h2><center><b><font face="biome" >Signup</font></b></center></h2>
         <form onSubmit = 
           {async (event) => {
             event.preventDefault();
@@ -26,13 +72,14 @@ class Signup extends Component {
             const email = this.email.value
             const password = this.password.value
            
-            console.log(this.props.userNumber)
-            console.log(this.props.userDetails)
-            console.log(name)
-            console.log(email)
-            console.log(password)
-            await this.props.signUp(name, email, password)
+            await this.props.location.signUp(name, email, password)
+            let count = this.props.location.userNumber
+            console.log(count)
             console.log("user added")
+            username = this.name
+            userid = this.props.location.userNumber
+            this.setHomeRedirect()
+                      
           }          
             
           }>
@@ -89,4 +136,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default withRouter(Signup);

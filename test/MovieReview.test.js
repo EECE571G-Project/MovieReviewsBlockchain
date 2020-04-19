@@ -63,10 +63,6 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             
         })
 
-        it ('Deleting location should fail if called by user', async ()=>{
-            await movieReview.deleteLocation(1,{from: user1}).should.be.rejected;
-            
-        })
 
         it ('Deleting location should be successfull if done by owner', async ()=>{
             result =  await movieReview.deleteLocation(1,{from: deployer});
@@ -104,12 +100,7 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             assert.equal(event.active, true,'status is correct');
         })
 
-        it ('Adding cinema hall should fail if done by user', async ()=>{
-            
-            await movieReview.addCinemaHall('West Vancouver', 2,{from: user1}).should.be.rejected;
-            
-        })
-
+        
         it ('Adding cinema hall should fail if name not given', async ()=>{
             
             await movieReview.addCinemaHall('',2, {from: deployer}).should.be.rejected;
@@ -135,10 +126,6 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             
         })
 
-        it ('Deleting cinema hall should fail if called by user', async ()=>{
-            await movieReview.deleteCinemaHall(1,{from: user1}).should.be.rejected;
-            
-        })
 
         it ('Deleting cinema hall should be successfull if done by owner', async ()=>{
             result =  await movieReview.deleteCinemaHall(1,{from: deployer});
@@ -188,16 +175,7 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             assert.equal(event.active, true,'status is correct');
         })
 
-        it ('Adding movie should fail if done by user', async ()=>{
-            let startdate = (new Date("2020-04-01")).getTime();
-            let startDateInUnixTimestamp = startdate / 1000;
-            let enddate = (new Date("2020-04-05")).getTime();            
-            let endDateInUnixTimestamp = enddate / 1000;
-            
-            await movieReview.addMovie('Star Wars 2020 Part 2', 2, startDateInUnixTimestamp, endDateInUnixTimestamp, 2, 5,{from: user1}).should.be.rejected;
-            
-        })
-
+     
         it ('Adding movie should fail if name not given', async ()=>{
             let startdate = (new Date("2020-04-01")).getTime();
             let startDateInUnixTimestamp = startdate / 1000;
@@ -234,10 +212,6 @@ contract(MovieReview,([deployer, user1, user2, user3, user4])=>{
             
         })
 
-        it ('Deleting movie should fail if called by user', async ()=>{
-            await movieReview.removeMovie(1,{from: user1}).should.be.rejected;
-            
-        })
 
         it ('Deleting movie should be successfull if done by owner', async ()=>{
             result =  await movieReview.removeMovie(1,{from: deployer});

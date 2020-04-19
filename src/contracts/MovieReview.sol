@@ -194,11 +194,14 @@ contract MovieReview {
         require(bytes(_locationName).length > 0, "Location's name is required");
         //require(msg.sender == owner, "Only owner can add location");
 
-        uint256 count;
-        for (uint256 i = 1; i <= locationNumber; i++) {
-            if(keccak256(bytes(locations[i].name)) == keccak256(bytes(_locationName)))
-            {
-                count++;
+        uint256 count = 0;
+        if(locationNumber > 0)
+        {
+            for (uint256 i = 1; i <= locationNumber; i++) {
+                if(keccak256(bytes(locations[i].name)) == keccak256(bytes(_locationName)))
+                {
+                    count++;
+                }
             }
         }
         require(count == 0, "Location with same name already exist");
@@ -229,10 +232,13 @@ contract MovieReview {
         require(_location.active != false, 'Location status is inactive');
 
         uint256 count;
-        for (uint256 i = 1; i <= cinemaHallNumber; i++) {
-            if(keccak256(bytes(cinemaHalls[i].name)) == keccak256(bytes(_name)) && cinemaHalls[i].locationId == _locationID)
-            {
-                count++;
+        if(cinemaHallNumber > 0)
+        {
+            for (uint256 i = 1; i <= cinemaHallNumber; i++) {
+                if(keccak256(bytes(cinemaHalls[i].name)) == keccak256(bytes(_name)) && cinemaHalls[i].locationId == _locationID)
+                {
+                    count++;
+                }
             }
         }
         require(count == 0, "Cinema Hall with same name already exist in the given Location");
@@ -374,22 +380,26 @@ contract MovieReview {
         Movie memory _movie = movies[_movieId];
         require(_movie.active != false, 'Movie status is  inactive');
         uint256 bookingId;
+         if(bookingNumber > 0) {
         for (uint256 i = 1; i <= bookingNumber; i++) {
             if(movieBookings[i].userId == _userId && movieBookings[i].movieId == _movieId && movieBookings[i].cancelled == false)
             {
                 bookingId = i;
             }
         }
+         }
         MovieBooking memory _movieBooking = movieBookings[bookingId];
         require(_movieBooking.cancelled != true, 'Movie booking is already cancelled');
 
         uint256 count;
+        if(checkInCheckOutNumber > 0) {
         for (uint256 i = 1; i <= checkInCheckOutNumber; i++) {
             if(userCheckInCheckouts[i].userId == _userId && userCheckInCheckouts[i].movieId == _movieId)
             {
                 count = i;
             }
         }
+         }
         require(count == 0, 'User has already checked in');
 
         checkInCheckOutNumber++;
@@ -434,8 +444,8 @@ contract MovieReview {
     function calculateRatingBasedOnTime( uint _userId, uint _movieId, uint _checkInTime, uint _checkOutTime, uint movieLength, string memory _review) public {
         reviewNumber++;
         uint rating;
-        uint time_in_min = (_checkOutTime-_checkInTime)/(1000*60);
-        rating = (time_in_min * 10)/movieLength;
+        uint time_in_min = ((_checkOutTime-_checkInTime)*10)/(1000*60);
+        rating = (time_in_min)/movieLength;
         reviews[reviewNumber] = Review(reviewNumber, _userId, _movieId, rating, _review);
         emit ReviewAdded(reviewNumber, _userId, _movieId, rating, _review);
     }

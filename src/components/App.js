@@ -6,9 +6,43 @@ import Addressbar from './Addressbar'
 import Login from './Login'
 import Signup from './Signup'
 import Location from './Location'
+import Cinema from './Cinema'
+import UpdateCinemaHall from './UpdateCinemaHall'
 import Home from './Home'
+import UserHome from './UserHome'
+import AdminHome from './AdminHome'
+import UpdateLocation from './UpdateLocation'
+import Movie from './Movie'
+import UpdateMovie from './UpdateMovie'
+import CheckInCheckOut from './CheckInCheckOut'
+import CheckOut from './CheckOut'
+
+import BookCancelMovie from'./BookCancelMovie'
+
+
+import MovieReviews from'./MovieReviews'
+import { Link, BrowserRouter as Router, Route, Switch , BrowserRouter} from 'react-router-dom';
+
+import {  withRouter} from 'react-router';
 
 class App extends Component {
+  constructor(){
+    super()
+    this.state.addLocation = this.addLocation
+    this.state.deleteLocation = this.deleteLocation
+    this.state.addCinemaHall = this.addCinemaHall
+    this.state.deleteCinemaHall = this.deleteCinemaHall
+    this.state.addMovie = this.addMovie
+    this.state.removeMovie = this.removeMovie
+    this.state.updateMovie = this.updateMovie
+    this.state.signUp = this.signUp
+    this.state.bookMovieTicket = this.bookMovieTicket
+    this.state.cancelMovieTicket = this.cancelMovieTicket
+    this.state.checkIn = this.checkIn
+    this.state.checkOut = this.checkOut
+
+  }
+
   state = {    
     account: '',
     loading: true,
@@ -39,6 +73,7 @@ class App extends Component {
   async getWeb3Provider(){
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
+      
       await window.ethereum.enable();
     }
     else if (window.web3) {
@@ -165,9 +200,11 @@ class App extends Component {
 
   deleteLocation = async (id) => {
     this.setState ({loading: true})
+    console.log("ïnside applicationCache.js delete location function")
     const gasAmount = await this.state.deployedMovieReview.methods.deleteLocation(id).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
     this.state.deployedMovieReview.methods.deleteLocation(id).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
+      console.log("after delete")
       this.setState({loading: false});
     })
   }
@@ -224,18 +261,24 @@ class App extends Component {
 
   signUp = async (name, email, password) => {
     this.setState ({loading: true})
+    alert("Signup click");
+    
     const gasAmount = await this.state.deployedMovieReview.methods.signUp(name, email, password).estimateGas({from: this.state.account}) //we are changing the state so .call () is not enough ...we need to specify account and gas will be 
     this.state.deployedMovieReview.methods.signUp(name, email, password).send({from: this.state.account, gas: gasAmount}) //actual sending the real transaction
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
+    
     })
+    
   }
 
 
-  bookMovieTicket = async (userId, movieId, cinemaHallId, date, time, movieprice) => {
+  bookMovieTicket = async (userId, movieId, cinemaHallId, date, time) => {
     this.setState ({loading: true})
-    const gasAmount = await this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).estimateGas({from: this.state.account, value: movieprice})
-    this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).send({from: this.state.account, value: movieprice, gas: gasAmount })
+    window.web3 = new Web3(window.ethereum);
+    const moviePrice = window.web3.utils.toWei('5', 'Ether')
+    const gasAmount = await this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).estimateGas({from: this.state.account, value: moviePrice})
+    this.state.deployedMovieReview.methods.bookMovieTicket(userId, movieId, cinemaHallId, date, time).send({from: this.state.account, value: moviePrice, gas: gasAmount })
     .once('receipt', (receipt)=> {
       this.setState({loading: false});
     })
@@ -277,39 +320,50 @@ class App extends Component {
         <div className="container-fluid mt-5">
           <div className="row">
             <main>
-              { this.state.loading 
+              { this.state.loading
                 ? 
                   <div><p className="text-center">Loading ...</p></div> 
                 : 
-                  <Location locationNumber = {this.state.locationNumber}  //transfer the components/args to other file.
-                        cinemaHallNumber = {this.state.cinemaHallNumber}
-                        movieNumber = {this.state.movieNumber}
-                        userNumber = {this.state.userNumber}
-                        bookingNumber = {this.state.bookingNumber}
-                        checkInCheckOutNumber = {this.state.checkInCheckOutNumber}
-                        reviewNumber = {this.state.reviewNumber}
-                        locations = {this.state.locations}
-                        cinemaHalls = {this.state.cinemaHalls}
-                        movies = {this.state.movies}
-                        userDetails = {this.state.userDetails}
-                        movieBookings = {this.state.movieBookings}
-                        userCheckInCheckouts = {this.state.userCheckInCheckouts}
-                        reviews = {this.state.reviews}
-                        addLocation = {this.addLocation}
-                        deleteLocation = {this.deleteLocation}
-                        addCinemaHall = {this.addCinemaHall}
-                        deleteCinemaHall = {this.deleteCinemaHall}
-                        addMovie = {this.addMovie}
-                        removeMovie = {this.removeMovie}
-                        updateMovie = {this.updateMovie}
-                        signUp = {this.signUp}
-                        bookMovieTicket = {this.bookMovieTicket}
-                        cancelMovieTicket = {this.cancelMovieTicket}
-                        checkIn = {this.checkIn}
-                        checkOut = {this.checkOut}   
-                        currentUserId = {this.state.currentUserId}
-                        currentUserName = {this.state.currentUserName}
-                  />}
+                <Router>
+                  <Link to="/">Home</Link>
+                  <Link to="/Home">Home</Link>
+                  <Link to="/UserHome">UserHome</Link>
+                  <Link to="/AdminHome">UserHome</Link>
+                  <Link to="/Login">Login</Link>
+                  <Link to="/Signup">Login</Link>
+                  <Link to="/Location">Location</Link>
+                  <Link to="/UpdateLocation">Location</Link>
+                  <Link to="/Cinema">Cinema</Link>
+                  <Link to="/UpdateCinemaHall">UpdateCinemaHall</Link>
+                  <Link to="/Movie">Movie</Link>
+                  <Link to="/UpdateMovie">UpdateMovie</Link>
+                  <Link to="/BookCancelMovie">BookCancelMovie</Link>
+                 
+                  <Link to="/CheckInCheckOut">CheckInCheckOut</Link>
+                  <Link to="/CheckOut">CheckOut</Link>
+                  <Link to="/MovieReviews">MovieReviews</Link>
+
+                  
+                  <Route exact path="/" render={(props) => <Home {...props} state = {this.state}/>} />
+                  <Route exact path="/Home" component={Home} />
+                  <Route exact path="/UserHome" component={UserHome} />
+                  <Route exact path="/AdminHome" component={AdminHome} />
+                  <Route exact path="/Login" component={Login} />
+                  <Route exact path="/Signup" component={Signup} />
+                  <Route exact path="/Location" component={Location} />
+                  <Route exact path="/UpdateLocation" component={UpdateLocation} />
+                  <Route exact path="/Cinema" component={Cinema} />
+                  <Route exact path="/UpdateCinemaHall" component={UpdateCinemaHall} />
+                  <Route exact path="/Movie" component={Movie} />
+                  <Route exact path="/UpdateMovie" component={UpdateMovie} />
+                  <Route exact path="/BookCancelMovie" component={BookCancelMovie} />
+                 
+                  <Route exact path="/CheckInCheckOut" component={CheckInCheckOut} />
+                  <Route exact path="/CheckOut" component={CheckOut} />
+                  <Route exact path="/MovieReviews" component={MovieReviews} />
+                </Router>
+               
+              }
             </main>
           </div>
         </div>
@@ -318,4 +372,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
